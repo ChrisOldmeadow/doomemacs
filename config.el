@@ -33,7 +33,13 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
+
+
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
+
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -54,31 +60,56 @@
 ;; they are implemented.
 
 (custom-set-variables
- '(org-directory "~/Documents/org")
+ '(org-directory "~/Nextcloud/org")
  '(org-agenda-files (list org-directory)))
 
-
-
- (setq display-buffer-alist
-      `(("^\\*R Dired"
-         (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . right)
-         (slot . -1)
-         (window-width . 0.33)
-         (reusable-frames . nil))
-        ("^\\*R"
-         (display-buffer-reuse-window display-buffer-at-bottom)
-         (window-width . 0.5)
-         (reusable-frames . nil))
-        ("^\\*Help"
-         (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . right)
-         (slot . 1)
-         (window-width . 0.33)
-         (reusable-frames . nil))))
 
 
 (after! org
   (setq org-log-done 'time  )
   (setq org-todo-keywords '((sequence "TODO(t)" "PAPER(p)" "GRANT(g)" "PROJECT(w)" "ADMIN(a)" "|" "DONE(d)")))
 )
+
+
+(load! "ess")
+
+
+
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+
+
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    company-ispell
+    company-files
+    company-yasnippet))
+
+
+
+(set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
+
+(setq ispell-dictionary "en-custom")
+
+(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+
+;; doom popup faster
+(setq which-key-idle-delay 0.5)
+
+
+;; display ansi colors in text
+(after! text-mode
+  (add-hook! 'text-mode-hook
+             ;; Apply ANSI color codes
+             (with-silent-modifications
+               (ansi-color-apply-on-region (point-min) (point-max)))))
+
+;; spelling in org-mode
+
+(add-hook 'org-mode-hook 'turn-on-flyspell)

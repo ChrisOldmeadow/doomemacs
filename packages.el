@@ -50,4 +50,12 @@
 ;(unpin! t)
 
 
-(package! evil-tutor mu4e magit)
+(package! evil-tutor)
+(package! polymode)
+(package! poly-markdown)
+(package! poly-R)
+(package! ess-view)
+(package! ess-view-data)
+(package! writegood-mode)
+(package! xterm-color)
+(package! rainbow-mode)
