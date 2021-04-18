@@ -59,3 +59,4 @@
 (package! writegood-mode)
 (package! xterm-color)
 (package! rainbow-mode)
+(package! evil-multiedit)
